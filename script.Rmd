@@ -1,0 +1,114 @@
+---
+title: "TP Multi-omics"
+author: "Goulancourt Rebecca & Jamay Théo"
+date: "19/10/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Chargement des librairies
+
+```{r}
+BiocManager::install("mixOmics")
+BiocManager::install("timeOmics")
+install.packages("tidyverse")
+```
+
+```{r}
+library("tidyverse")
+library("timeOmics")
+library("mixOmics")
+```
+
+# Chargement des données
+
+```{r}
+mirna <- read.csv("mirna.csv", sep  = ",", header = T, row.names = 1)
+mrna <- read.csv("mrna.csv", sep = ",", header = T,row.names = 1)
+protein <- read.csv("protein.csv", sep = ",", header =T, row.names = 1)
+sample_group <- read.csv("sample_group.csv", sep = ",", header = T, row.names = 1)
+```
+
+# Question 1
+
+```{r}
+
+number_ech_miRNA <- nrow(mirna)
+number_ech_mRNA <- nrow(mrna)
+number_ech_protein <- nrow(protein)
+```
+Pour chaque variable il y a 150 échantillons
+
+```{r}
+variation_coef <- function(data_frame) {
+  sd <- apply(data_frame, 2, sd)
+  nu <- apply(data_frame, 2, mean)
+  cv <- sd/nu
+  
+  hist(cv, main = "histogramme de la distribution du Cv",
+       xlab = "coefficient de variation", ylab = "fréquence")
+  
+  return(cv)
+}
+
+liste <- list(mrna, mirna, protein)
+
+for (df in liste) {
+  var <- variation_coef(df)
+  print(var)
+}
+```
+variation_coef <- function(data_frame, name) {
+  sd <- apply(data_frame, 2, sd)
+  nu <- apply(data_frame, 2, mean)
+  cv <- sd/nu
+  
+  hist(cv, main = "histogramme de la distribution du Cv", sub = paste("bloc_", name),
+       xlab = "coefficient de variation", ylab = "fréquence")
+  
+  return(cv)
+}
+
+liste <- list(mrna = mrna, mirna = mirna, protein = protein)
+
+for (i in liste) {
+  n <- names(liste)[i]
+  var <- variation_coef(i, n)
+  print(var)
+}
+
+
+# Question 2
+
+La distribution du coefficient de variation n'est pas similaire dans chacun des blocs
+l'histogramme possédant le plus de variabilité est l'histogramme de la df protein car l'axe des abscisses est bien plus étendu que pour les autres histogrammes ([-100,200])
+
+
+new_liste <- list()
+for (i in 1:length(liste)) {
+  var <- variation_coef(liste[i])
+  cor_cv <- liste[i][,abs(var) >= 0.15]
+  new_liste[i] <- cor_cv
+
+}
+
+
+```{r}
+liste_var <- NULL
+for (i in liste) {
+  var <- variation_coef(i)
+  cor_cv <- var[abs(var) >= 0.15]
+  print(cor_cv)
+  liste_var <- c(liste_var, list(cor_cv))
+}
+```
+
+# Question 3
+
+
+
+
+
