@@ -212,13 +212,34 @@ var <- get_pca_var(acp)
 ```
 
 variables qui contribuent le + à l'axe 1 (on prends arbitrairement les variables dont la contribution est > 1) :
+
+
+var_1 <- NULL
+for (i in contrib[, "Dim.1"]) {
+  if (i > 1) {
+    print(rownames(contrib)[i])
+    var_1 <- cbind(var_1, rownames(contrib)[i])
+  }
+}
+
 ```{r}
 contrib <- as.data.frame(var$contrib)
 
+var_1 <- NULL
+for (i in 1:nrow(contrib)) {
+  if (contrib[i, "Dim.1"] > 1) {
+    #print(rownames(contrib)[i])
+    var_1 <- cbind(var_1, rownames(contrib)[i])
+  }
+}
 
-
+print("Variables contribuant le plus à l'axe 1 :   ")
+print(var_1)
 ```
 
+```{r}
+
+```
 
 
 
