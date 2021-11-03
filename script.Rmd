@@ -285,10 +285,13 @@ for (i in lines) {
 ```
 
 ```{r}
-acp2 <- pca(df_var)
-plotVar(acp2, comp = c(1, 2), var.names = TRUE, 
-        title = 'ACP ')
+acp2 <- pca(mrna, ncomp = 2, center = TRUE, scale = TRUE)
+plotIndiv(acp2, comp = c(1, 2), ind.names = TRUE, 
+          group = sample_group$Y, 
+          legend = TRUE, title = 'ACP des échantillons')
 ```
+pas bcp d'infos --> seulement 12+22 = 34% de la variance expliquée
+
 
 
 
