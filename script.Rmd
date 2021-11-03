@@ -117,16 +117,107 @@ for (i in liste_var) {
 
 # Question 4
 
+df_mrna <- as.data.frame(liste_var[1])
+df_mirna <- as.data.frame(liste_var[2])
+df_prot <- as.data.frame(liste_var[3])
+
+max_liste <- NULL
+
+for (i in liste_var) {
+  #print(summary(i))
+  max_liste <- cbind(max_liste, max(i))
+  gene <- which(i == max(i))
+  print(gene)
+  #print(gene %in% i)
+  #if (gene %in% i) {
+  #if (match(gene, i) == TRUE) {
+  #  print(gene, "est présent")
+  #}
+} 
+print(max_liste)
+
+  for (j in rownames(df_mrna)) {
+    print(j[gene])
+    #name_gene <-  
+    
+    
+name_gene <- df_mrna[gene,]
+print(name_gene)
+name_gene <- list(rownames(df_mrna))
+print(name_gene)
+print(typeof(name_gene))
+name_gene[160]
+print(typeof(df_mrna))
+print(row(df_mrna[gene,]))
+print(name_gene[gene])
 ```{r}
 df_mrna <- as.data.frame(liste_var[1])
 df_mirna <- as.data.frame(liste_var[2])
 df_prot <- as.data.frame(liste_var[3])
 
-for (i in liste_var) {
-  print()
-} 
+for (i in df_mrna) {
+  gene <- which(i == max(i))
+  print(gene)
+}
+
+for (i in 1:gene) {
+  name <- rownames(df_mrna)[i]
+}
+
+print(paste0("le gène le plus variant est le ", name, " avec un maximum de Cv de ", max(i)))
+```
+```{r}
+print(match(name, rownames(df_mrna)))
+rownames(df_mrna)[name] %in% colnames(protein)
+```
+pas présent dans le jeu de données protéique car FALSE
+
+# Question 5
+
+On cherche PLCD4 humaine sur Uniprot -->
+role = Hydrolyzes the phosphatidylinositol 4,5-bisphosphate (PIP2) to generate 2 second messenger molecules diacylglycerol (DAG) and inositol 1,4,5-trisphosphate (IP3). DAG mediates the activation of protein kinase C (PKC), while IP3 releases Ca2+ from intracellular stores. Required for acrosome reaction in sperm during fertilization, probably by acting as an important enzyme for intracellular Ca2+ mobilization in the zona pellucida-induced acrosome reaction. May play a role in cell growth. Modulates the liver regeneration in cooperation with nuclear PKC. Overexpression up-regulates the Erk signaling pathway and proliferation.
++ activité catalytique
+
+localisation chromosomique = chromosome 2
+
+longueur = inconnu?
+longueur = 762 acides aminés
+
+
+# Partie 2
+
+# Question 6
+
+ACP = Analyse en composante principale est une méthode d'analyse multidimensionnelle (sur des variables quantitatives uniquement) et permet d'observer le comportement de variables à n dimensions en les réduisants à 2 dimensions tout en gardant le maximum d'informations possible.
+Cela permet d'étudier la corrélation entre des variables et la création potentielle de groupes homogènes.
+
+```{r}
+install.packages("FactoMineR")
+install.packages("factoextra")
+library("FactoMineR")
+library("factoextra")
 ```
 
+```{r}
+acp <- PCA(mrna)
+```
+# Question 7 
+
+On retiens 5 composantes car ncp = 5 par défaut
+mais peu d'informations (13.12% + 18.92% = 32.04% totaux)
+
+```{r}
+acp <- PCA(mrna, scale.unit = TRUE, ncp = 2)
+var <- get_pca_var(acp)
+```
+
+variables qui contribuent le + à l'axe 1 (on prends arbitrairement les variables dont la contribution est > 1) :
+```{r}
+contrib <- as.data.frame(var$contrib)
+
+
+
+```
 
 
 
