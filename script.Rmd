@@ -199,17 +199,23 @@ library("factoextra")
 ```
 
 ```{r}
-acp <- PCA(mrna)
+#tune.pca(mrna, ncomp = 10, center = TRUE, scale = FALSE)
+#acp <- PCA(mrna, scale.unit = TRUE, ncp = 2)
+acp <- pca(mrna, ncomp = 10, center = TRUE, scale = TRUE)
+plot(acp)
 ```
 # Question 7 
 
-On retiens 5 composantes car ncp = 5 par défaut
-mais peu d'informations (13.12% + 18.92% = 32.04% totaux)
+On retiens 2 composantes car ils expliquent le mieux la variance
 
 ```{r}
-acp <- PCA(mrna, scale.unit = TRUE, ncp = 2)
-var <- get_pca_var(acp)
+acp <- pca(mrna, ncomp = 2, center = TRUE, scale = TRUE)
+plotVar(acp, comp = c(1, 2), var.names = TRUE, 
+        title = 'ACP des variables de mRNA')
 ```
+
+
+# Question 8
 
 variables qui contribuent le + à l'axe 1 (on prends arbitrairement les variables dont la contribution est > 1) :
 
@@ -223,6 +229,7 @@ for (i in contrib[, "Dim.1"]) {
 }
 
 ```{r}
+var <- get_pca_var(acp)
 contrib <- as.data.frame(var$contrib)
 
 var_1 <- NULL
@@ -275,9 +282,13 @@ for (i in lines) {
 #acp_var <- PCA(df_var, scale.unit = TRUE, ncp = 2)
 #title("ACP des variables contribuant le plus à l'axe 1")
 
-fviz_pca_var(df_var, col.var = "cor", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE)
 ```
 
+```{r}
+acp2 <- pca(df_var)
+plotVar(acp2, comp = c(1, 2), var.names = TRUE, 
+        title = 'ACP ')
+```
 
 
 
