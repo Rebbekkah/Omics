@@ -236,9 +236,46 @@ for (i in 1:nrow(contrib)) {
 print("Variables contribuant le plus à l'axe 1 :   ")
 print(var_1)
 ```
+df_var <- NULL
+for (i in rownames(contrib)) {
+  print(i)
+    for (j in var_1) {
+      if (i == j) {
+        df_var <- cbind(df_var, contrib[i])
+      }
+    }
+}
+
+for (i in 1:nrow(contrib)) {
+  #print(contrib[i,])
+  #print(rownames(contrib[i,]))
+  for (j in var_1) {
+    if (j == rownames(contrib)[i]) {
+      df_var <- cbind(df_var, contrib[i,])
+    }
+  }
+}
+
+for (i in lines) {
+  #print(i)
+  print(contrib[i,])
+  df_var[i,] <- rbind(df_var, contrib[i,])
+}
 
 ```{r}
+df_var <- NULL
+lines <- c(match(var_1, rownames(contrib)))
+      
+for (i in lines) {
+  #print(i)
+  #print(contrib[i,])
+  df_var <- rbind(df_var, contrib[i,])
+}
 
+#acp_var <- PCA(df_var, scale.unit = TRUE, ncp = 2)
+#title("ACP des variables contribuant le plus à l'axe 1")
+
+fviz_pca_var(df_var, col.var = "cor", gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"), repel = TRUE)
 ```
 
 
