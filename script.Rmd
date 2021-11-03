@@ -19,8 +19,8 @@ install.packages("tidyverse")
 
 ```{r}
 library("tidyverse")
-library("timeOmics")
 library("mixOmics")
+library("timeOmics")
 ```
 
 # Chargement des données
@@ -28,14 +28,15 @@ library("mixOmics")
 ```{r}
 mirna <- read.csv("mirna.csv", sep  = ",", header = T, row.names = 1)
 mrna <- read.csv("mrna.csv", sep = ",", header = T,row.names = 1)
-protein <- read.csv("protein.csv", sep = ",", header =T, row.names = 1)
+protein <- read.csv("protein.csv", sep = ",", header = T, row.names = 1)
 sample_group <- read.csv("sample_group.csv", sep = ",", header = T, row.names = 1)
 ```
+
+# Partie I
 
 # Question 1
 
 ```{r}
-
 number_ech_miRNA <- nrow(mirna)
 number_ech_mRNA <- nrow(mrna)
 number_ech_protein <- nrow(protein)
@@ -107,6 +108,28 @@ for (i in liste) {
 ```
 
 # Question 3
+
+```{r}
+for (i in liste_var) {
+  print(length(i))
+}
+```
+
+# Question 4
+
+```{r}
+df_mrna <- as.data.frame(liste_var[1])
+df_mirna <- as.data.frame(liste_var[2])
+df_prot <- as.data.frame(liste_var[3])
+
+for (i in liste_var) {
+  print()
+} 
+```
+
+
+
+
 
 
 
