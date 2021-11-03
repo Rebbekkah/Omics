@@ -287,11 +287,15 @@ for (i in lines) {
 ```{r}
 acp2 <- pca(mrna, ncomp = 2, center = TRUE, scale = TRUE)
 plotIndiv(acp2, comp = c(1, 2), ind.names = TRUE, 
-          group = sample_group$Y, 
+          group = sample_group$Y, style = 'ggplot2',
           legend = TRUE, title = 'ACP des échantillons')
 ```
 pas bcp d'infos --> seulement 12+22 = 34% de la variance expliquée
 
+```{r}
+spca <- spca(mrna, ncomp = 2, center = TRUE, scale = TRUE, keepX = c(10, 5))
+plot(spca, xlim = c(-15, 15), ylim = c(-15, 15))
+```
 
 
 
