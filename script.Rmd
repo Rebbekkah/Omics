@@ -294,11 +294,44 @@ pas bcp d'infos --> seulement 12+22 = 34% de la variance expliquée
 
 ```{r}
 spca <- spca(mrna, ncomp = 2, center = TRUE, scale = TRUE, keepX = c(10, 5))
-plot(spca, xlim = c(-15, 15), ylim = c(-15, 15))
+plotVar(spca)
+selectVar(spca) # variables sélectionnés
 ```
 
 
 
+PLS = partial least squares
+```{r}
+#install.packages("pls")
+```
 
+
+pas sure du tout :
+```{r}
+dim(mrna)
+dim(protein)
+X <- mrna
+#Y <- as.factor(protein)
+Y <- sample_group$Y
+
+typeof(Y)
+
+
+pls_mrna <- plsda(X, Y, ncomp = 3, scale = TRUE, mode = "classic")
+x <- protein
+plotIndiv(pls_mrna)
+pls_prot <- plsda(x, Y, ncomp = 3, scale = TRUE, mode = "classic")
+plotIndiv(pls_prot)
+```
+
+# Question 10
+
+On utilise la régression PLS lorsque la régression multiple n'est pas applicable, comme c'est le cas lorsqu'il y a de fortes colinéarité entre les variables (souvent le cas dans les études omics) ou lorsque l'on a plus de variables que d'individus. Ces raisons font qu'elles sont souvent utilisées dans le cadre d'analyses omics.
+
+
+```{r}
+plotIndiv(pls_mrna, comp = c(2, 3))
+plotIndiv(pls_prot, comp = c(2, 3))
+```
 
 
