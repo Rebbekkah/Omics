@@ -334,4 +334,8 @@ plotIndiv(pls_mrna, comp = c(2, 3))
 plotIndiv(pls_prot, comp = c(2, 3))
 ```
 
+```{r}
+plotArrow(pls_mrna, comp = c(1, 3))
+plotArrow(pls_prot, comp = c(1, 3))
+```
 
