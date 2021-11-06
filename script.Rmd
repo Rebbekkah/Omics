@@ -19,6 +19,10 @@ install.packages("tidyverse")
 
 ```{r}
 library("tidyverse")
+#install.packages("igraph")
+#install.packages("igraph", repos=c("http://rstudio.org/_packages",
+#"http://cran.rstudio.com",dependencies=TRUE))
+#install.packages("igraph", type = "binary")
 library("mixOmics")
 library("timeOmics")
 ```
@@ -194,8 +198,10 @@ ACP = Analyse en composante principale est une méthode d'analyse multidimension
 Cela permet d'étudier la corrélation entre des variables et la création potentielle de groupes homogènes.
 
 ```{r}
-install.packages("FactoMineR")
-install.packages("factoextra")
+#install.packages("FactoMineR")
+#install.packages("FactoMineR", type = "binary")
+#install.packages("factoextra")
+#install.packages("factoextra", type = "binary")
 library("FactoMineR")
 library("factoextra")
 ```
@@ -346,7 +352,8 @@ spls :
 ```{r}
 spls <- spls(mrna, protein, ncomp = 3, keepX = c(10, 5, 1), keepY = c(9, 5, 1))
 plotVar(spls)
-selectVar(spls) #variables sélectionnées
+select <- selectVar(spls) #variables sélectionnées
+select
 ```
 
 ```{r}
@@ -366,22 +373,113 @@ dev.off()
 # Multiblock Projection on Latent Structures
 
 ```{r}
-block <- block.pls(X = list(mrna, protein), Y = mirna, ncomp = 2)
+block_pls <- list(data.matrix(mrna), data.matrix(protein))
+names(block_pls) <- c("mrna", "protein")
+mb <- block.pls(X = block_pls, Y = data.matrix(mirna), ncomp = 2)
+#plotIndiv(mb)
+plotVar(mb)
 ```
+
+```{r}
+block_spls <- list(data.matrix(mrna), data.matrix(protein))
+names(block_spls) <- c("mrna", "protein")
+
+keepx <- list(c(10, 5), c(9, 4))
+keepy <- c(7, 3)
+names(keepx) <- names(block_spls)
+mbs <- block.spls(X = block_spls, Y = data.matrix(mirna), ncomp = 2, keepX = keepx, keepY = keepy)
+plotVar(mbs)
+#plotIndiv(mbs)
+```
+
+```{r}
+select_mbs <- selectVar(mbs)
+select_mbs
+```
+
+3e composante --> Y
+
 
 # Analyse supervisée : la (s)PLS-DA
 
 # Question 15
 
+mat_grp_mrna <- cbind(rownames(mrna), sample_group) 
+mat_grp_prot <- cbind(rownames(protein), sample_group) 
+mat_grp_mirna <- cbind(rownames(mirna), sample_group) 
+
+```{r}
+grp1 <-  NULL
+grp2 <- NULL
+grp3 <- NULL
+
+for (i in 1:nrow(sample_group)) {
+  if (sample_group[i, "Y"] == "Gr_1") {
+    grp1 <- c(grp1, rownames(sample_group)[i])
+  }
+  else if (sample_group[i, "Y"] == "Gr_2") {
+    grp2 <- c(grp2, rownames(sample_group)[i])
+  }
+  else {
+    grp3 <- c(grp3, rownames(sample_group)[i])
+  }
+}
+
+print("Individus du groupe 1 : ")
+print(grp1)
+print("Individus du groupe 2 : ")
+print(grp2)
+print("Individus du groupe 3 : ")
+print(grp3)
+```
 
 
+plsda :
+```{r}
+plsda <- plsda(mrna, sample_group$Y, ncomp = 2)
+plotIndiv(plsda)
+```
+
+# Question 16
+
+plsda > pca car on a de meilleurs groupes plus distincts
+
+# Analyse supervisée : block-(s)PLS-DA
+
+```{r}
+block_splsda <- list(data.matrix(mrna), data.matrix(protein), data.matrix(mirna))
+names(block_splsda) <- c("mrna", "protein", "mirna")
+
+splsda <- block.splsda(X = block_splsda, Y = sample_group$Y, ncomp = 5)
+plotVar(splsda)
+plotIndiv(splsda)
+```
+
+```{r}
+perf <- perf(splsda)
+plot(perf)
+```
+
+les erreurs se stabilisent après 3 composants --> nb minimal à avoir
 
 
+avec 2 comp :
+
+```{r}
+block_splsda_2 <- list(data.matrix(mrna), data.matrix(protein), data.matrix(mirna))
+names(block_splsda_2) <- c("mrna", "protein", "mirna")
+
+keepx <- list(c(15, 10), c(15, 10), c(15, 10))
+splsda_2 <- block.splsda(X = block_splsda_2, Y = sample_group$Y, ncomp = 2)
+plotVar(splsda_2)
+plotIndiv(splsda_2)
+```
 
 
-
-
-
+```{r}
+circosPlot(splsda_2, cutoff = 0.5)
+title("circos plot")
+```
 
 
 
